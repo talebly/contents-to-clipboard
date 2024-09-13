@@ -13,13 +13,6 @@ repositories {
 // Define the editions you want to support
 val editions = listOf("IC", "IU")
 
-// Configure Gradle IntelliJ Plugin
-intellij {
-  version.set("2023.2.6")
-  type.set(System.getenv().getOrDefault("INTELLIJ_TYPE", editions.first()))
-  plugins.set(listOf(/* Plugin Dependencies */))
-}
-
 tasks {
   // Set the JVM compatibility versions
   withType<JavaCompile> {
@@ -52,17 +45,31 @@ tasks {
 
 // Create tasks for each edition
 editions.forEach { edition ->
-  tasks.register("build${edition.replaceFirstChar { it.uppercase() }}Plugin") {
-    dependsOn("buildPlugin")
-    doLast {
-      val originalFile = layout.buildDirectory.file("distributions/${project.name}-${project.version}.zip").get().asFile
-      val newFile = layout.buildDirectory.file("distributions/${project.name}-${project.version}-$edition.zip").get().asFile
-      originalFile.renameTo(newFile)
+  tasks.register<org.jetbrains.intellij.tasks.BuildPluginTask>("build${edition}Plugin") {
+    group = "build"
+    description = "Builds the plugin for IntelliJ IDEA $edition edition"
+
+    // Configure the intellij plugin per task
+    intellij {
+      version.set("2023.2.6")
+      type.set(edition)
+      plugins.set(listOf(/* Plugin Dependencies */))
     }
+
+    // Set the destination directory for the plugin distribution
+    destinationDirectory.set(layout.buildDirectory.dir("distributions/$edition"))
+
+    // Ensure the plugin archive has the edition in its name
+    archiveBaseName.set("${project.name}-$edition")
+
+    // Optionally, configure signing and publishing here if needed
   }
 }
 
 // Create a task to build all editions
 tasks.register("buildAllPlugins") {
-  dependsOn(editions.map { "build${it.replaceFirstChar { it.uppercase() }}Plugin" })
+  group = "build"
+  description = "Builds the plugin for all specified editions"
+
+  dependsOn(editions.map { "build${it}Plugin" })
 }

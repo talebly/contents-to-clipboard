@@ -10,12 +10,13 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VFileProperty
+import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import java.awt.datatransfer.StringSelection
 import java.nio.charset.StandardCharsets
-import java.util.HashSet
-import java.util.Stack
-
+import java.nio.file.Paths
+import java.util.*
 
 class ContentsToClipboardAction : AnAction() {
 
@@ -28,7 +29,7 @@ class ContentsToClipboardAction : AnAction() {
                 val notification = NotificationGroupManager.getInstance()
                     .getNotificationGroup("Contents to Clipboard Notifications")
                     .createNotification(
-                        "No Files Selected",
+                        "No files selected",
                         "Please select one or more files or directories to copy.",
                         NotificationType.WARNING
                     )
@@ -48,6 +49,10 @@ class ContentsToClipboardAction : AnAction() {
         val settings = ContentsToClipboardSettings.getInstance()
         val separatorTemplate = settings.state.fileSeparator
         val useRelativePath = settings.state.useRelativePath
+
+        val currentProject = e.project
+        val projectBasePath = currentProject?.basePath
+        val projectBaseDir = projectBasePath?.let { VfsUtil.findFile(Paths.get(it), false) }
 
         while (fileStack.isNotEmpty()) {
             val file = fileStack.pop()
@@ -77,17 +82,11 @@ class ContentsToClipboardAction : AnAction() {
                 try {
                     val content = String(file.contentsToByteArray(), StandardCharsets.UTF_8)
 
-                    // Generate the separator by replacing placeholders
-                    val project = e.project
                     val absolutePath = file.path
                     val fileName = file.name
-                    val relativePath = if (project != null && project.basePath != null) {
-                        val basePath = project.basePath!!
-                        if (absolutePath.startsWith(basePath)) {
-                            absolutePath.substring(basePath.length)
-                        } else {
-                            absolutePath
-                        }
+
+                    val relativePath = if (projectBaseDir != null) {
+                        VfsUtilCore.getRelativePath(file, projectBaseDir) ?: absolutePath
                     } else {
                         absolutePath
                     }
@@ -113,7 +112,7 @@ class ContentsToClipboardAction : AnAction() {
                 val notification = NotificationGroupManager.getInstance()
                     .getNotificationGroup("Contents to Clipboard Notifications")
                     .createNotification(
-                        "No Files to Copy",
+                        "No files to copy",
                         "The selected items contain no files to copy.",
                         NotificationType.WARNING
                     )
@@ -129,25 +128,25 @@ class ContentsToClipboardAction : AnAction() {
             val notification = NotificationGroupManager.getInstance()
                 .getNotificationGroup("Contents to Clipboard Notifications")
                 .createNotification(
-                    "Contents Copied to Clipboard",
+                    "Contents copied to clipboard",
                     "The selected files have been combined and copied to your clipboard.",
                     NotificationType.INFORMATION
                 )
 
             // Add an action to disable future notifications
-            notification.addAction(object : NotificationAction("Don't Show Again") {
+            notification.addAction(object : NotificationAction("Don't show again") {
                 override fun actionPerformed(event: AnActionEvent, notification: com.intellij.notification.Notification) {
                     settings.state.showNotifications = false
 
                     // Optionally notify the user that notifications have been disabled
-                    val project: Project? = event.project
+                    val proj: Project? = event.project
                     NotificationGroupManager.getInstance()
                         .getNotificationGroup("Contents to Clipboard Notifications")
                         .createNotification(
-                            "Notifications Disabled",
+                            "Notifications disabled",
                             "You will no longer receive notifications from Contents to Clipboard.",
                             NotificationType.INFORMATION
-                        ).notify(project)
+                        ).notify(proj)
 
                     notification.expire() // Close the original notification
                 }

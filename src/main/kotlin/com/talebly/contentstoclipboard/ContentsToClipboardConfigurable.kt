@@ -2,6 +2,7 @@ package com.talebly.contentstoclipboard
 
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurableProvider
+import com.intellij.openapi.ui.ComboBox
 import org.jetbrains.annotations.Nls
 import javax.swing.*
 import java.awt.*
@@ -15,7 +16,7 @@ class ContentsToClipboardConfigurable : Configurable {
     private lateinit var separatorLabel: JLabel
     private lateinit var separatorTextField: JTextField
     private lateinit var pathTypeLabel: JLabel
-    private lateinit var pathTypeComboBox: JComboBox<String>
+    private lateinit var pathTypeComboBox: ComboBox<String>
 
     class Provider : ConfigurableProvider() {
         override fun createConfigurable(): Configurable {
@@ -26,11 +27,12 @@ class ContentsToClipboardConfigurable : Configurable {
     override fun createComponent(): JComponent {
         // Use GridBagLayout for precise control over component placement
         mainPanel = JPanel(GridBagLayout())
-        val gbc = GridBagConstraints()
-        gbc.insets = Insets(5, 5, 5, 5)
-        gbc.anchor = GridBagConstraints.WEST
-        gbc.fill = GridBagConstraints.HORIZONTAL
-        gbc.weightx = 1.0
+        val gbc = GridBagConstraints().apply {
+            insets = Insets(0, 0, 0, 0)
+            anchor = GridBagConstraints.WEST
+            fill = GridBagConstraints.HORIZONTAL
+            weightx = 1.0
+        }
 
         var row = 0
 
@@ -73,7 +75,7 @@ class ContentsToClipboardConfigurable : Configurable {
         mainPanel.add(pathTypeLabel, gbc)
 
         // Path Type ComboBox
-        pathTypeComboBox = JComboBox(arrayOf("Absolute Path", "Relative to Project Root"))
+        pathTypeComboBox = ComboBox(arrayOf("Absolute Path", "Relative to Project Root"))
         pathTypeComboBox.selectedIndex = if (settings.state.useRelativePath) 1 else 0
         gbc.gridx = 1
         gbc.weightx = 1.0
@@ -103,7 +105,7 @@ class ContentsToClipboardConfigurable : Configurable {
     }
 
     override fun getDisplayName(): @Nls(capitalization = Nls.Capitalization.Title) String {
-        return "Code to Clipboard"
+        return "Contents to Clipboard"
     }
 
     override fun reset() {

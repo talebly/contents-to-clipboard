@@ -16,7 +16,7 @@ class ContentsToClipboardSettings : PersistentStateComponent<ContentsToClipboard
     data class State(
         var showNotifications: Boolean = true,
         var fileSeparator: String = "=== %FILE_PATH% ===\n",
-        var useRelativePath: Boolean = true // Default to absolute path
+        var useRelativePath: Boolean = true
     )
 
     private var state = State()

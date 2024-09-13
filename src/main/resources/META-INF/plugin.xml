@@ -1,5 +1,5 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
+  <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
   <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
   <id>com.talebly.contents-to-clipboard</id>
 
@@ -14,25 +14,24 @@
        Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
   <description><![CDATA[
-    <p><strong>Contents to Clipboard</strong> is a plugin that allows you to easily combine the contents of selected files and copy them to the clipboard with file headers.</p>
-    <p>An excellent resource for enriching the context provided to large language models like OpenAI’s ChatGPT and Anthropic’s Claude.
-</p>
-    <p><strong>Features:</strong></p>
-    <ul>
-        <li>Combine multiple files into a single text block.</li>
-        <li>Include file paths as configurable headers for each file.</li>
-        <li>Supports both files and directories (recursively).</li>
-        <li>Optional notifications upon completion.</li>
-        <li>Customizable settings accessible via the IDE's preferences.</li>
-    </ul>
-    <p><strong>How to Use:</strong></p>
-    <ol>
-        <li>Select one or more files or directories in the Project view.</li>
-        <li>Right-click and choose <em>Copy Selected to Clipboard</em> from the context menu, under the paste option.</li>
-        <li>Paste the combined content wherever you need it.</li>
-    </ol>
-    <p>This plugin is perfect for sharing code snippets, preparing samples for code reviews, or consolidating multiple files for documentation purposes.</p>
-]]></description>
+        <p><strong>Contents to Clipboard</strong> is a plugin that allows you to easily combine the contents of selected files and copy them to the clipboard with file headers.</p>
+        <p>An excellent resource for enriching the context provided to large language models like OpenAI’s ChatGPT and Anthropic’s Claude.</p>
+        <p><strong>Features:</strong></p>
+        <ul>
+            <li>Combine multiple files into a single text block.</li>
+            <li>Include file paths as configurable headers for each file.</li>
+            <li>Supports both files and directories (recursively).</li>
+            <li>Optional notifications upon completion.</li>
+            <li>Customizable settings accessible via the IDE's preferences.</li>
+        </ul>
+        <p><strong>How to Use:</strong></p>
+        <ol>
+            <li>Select one or more files or directories in the Project view.</li>
+            <li>Right-click and choose <em>Copy Selected to Clipboard</em> from the context menu, under the paste option.</li>
+            <li>Paste the combined content wherever you need it.</li>
+        </ol>
+        <p>This plugin is perfect for sharing code snippets, preparing samples for code reviews, or consolidating multiple files for documentation purposes.</p>
+    ]]></description>
 
   <!-- Product and plugin compatibility requirements.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -42,11 +41,12 @@
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
 
-    <!-- Register the settings configurable -->
+    <!-- Register the settings configurable under 'Tools' -->
     <applicationConfigurable
             id="com.talebly.contentstoclipboard.configurable"
             displayName="Contents to Clipboard"
-            provider="com.talebly.contentstoclipboard.ContentsToClipboardConfigurable$Provider" />
+            provider="com.talebly.contentstoclipboard.ContentsToClipboardConfigurable\$Provider"
+            groupId="tools" />
 
     <!-- Register the notification group -->
     <notificationGroup

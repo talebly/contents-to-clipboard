@@ -45,7 +45,7 @@
     <applicationConfigurable
             id="com.talebly.contentstoclipboard.configurable"
             displayName="Contents to Clipboard"
-            provider="com.talebly.contentstoclipboard.ContentsToClipboardConfigurable\$Provider"
+            instance="com.talebly.contentstoclipboard.ContentsToClipboardConfigurable"
             groupId="tools" />
 
     <!-- Register the notification group -->

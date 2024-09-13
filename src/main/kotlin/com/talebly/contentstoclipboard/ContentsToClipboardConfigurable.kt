@@ -3,6 +3,7 @@ package com.talebly.contentstoclipboard
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurableProvider
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.util.ui.JBInsets
 import org.jetbrains.annotations.Nls
 import javax.swing.*
 import java.awt.*
@@ -28,7 +29,7 @@ class ContentsToClipboardConfigurable : Configurable {
         // Use GridBagLayout for precise control over component placement
         mainPanel = JPanel(GridBagLayout())
         val gbc = GridBagConstraints().apply {
-            insets = Insets(0, 0, 0, 0)
+            insets = JBInsets(5, 5, 5, 5)
             anchor = GridBagConstraints.WEST
             fill = GridBagConstraints.HORIZONTAL
             weightx = 1.0
